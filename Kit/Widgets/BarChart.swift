@@ -180,15 +180,12 @@ public class BarChart: WidgetWrapper {
         // pill styling applies only when the box is off; a boxed chart renders as it always has
         let verticalInset: CGFloat = self.boxState ? 0 : 1
         let maxPartitionHeight: CGFloat = box.bounds.height - (verticalInset*2)
-        // a handful of bars are drawn as slim centred pills; many-core charts stay full width
-        let barWidth: CGFloat = self.boxState ? partitionWidth : min(partitionWidth, 6)
-        let barInset: CGFloat = (partitionWidth - barWidth) / 2
-        let barRadius: CGFloat = self.boxState ? 0 : min(barWidth, maxPartitionHeight) / 2
+        let barRadius: CGFloat = self.boxState ? 0 : min(partitionWidth, maxPartitionHeight) / 2
         
         x += offset
         for i in 0..<value.count {
             let barPath = NSBezierPath(
-                roundedRect: NSRect(x: x + barInset, y: offset + verticalInset, width: barWidth, height: maxPartitionHeight),
+                roundedRect: NSRect(x: x, y: offset + verticalInset, width: partitionWidth, height: maxPartitionHeight),
                 xRadius: barRadius, yRadius: barRadius
             )
             
@@ -208,7 +205,7 @@ public class BarChart: WidgetWrapper {
             for a in 0..<value[i].count {
                 let partitionValue = value[i][a]
                 let partitionHeight = maxPartitionHeight * CGFloat(partitionValue.value)
-                let partition = NSBezierPath(rect: NSRect(x: x + barInset, y: y, width: barWidth, height: partitionHeight))
+                let partition = NSBezierPath(rect: NSRect(x: x, y: y, width: partitionWidth, height: partitionHeight))
                 
                 if partitionValue.color == nil {
                     switch self.colorState {
