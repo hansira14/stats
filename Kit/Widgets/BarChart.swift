@@ -180,14 +180,12 @@ public class BarChart: WidgetWrapper {
         // pill styling applies only when the box is off; a boxed chart renders as it always has
         let verticalInset: CGFloat = self.boxState ? 0 : 1
         let maxPartitionHeight: CGFloat = box.bounds.height - (verticalInset*2)
-        let barRadius: CGFloat = self.boxState ? 0 : min(partitionWidth, maxPartitionHeight) / 2
         
         x += offset
         for i in 0..<value.count {
-            let barPath = NSBezierPath(
-                roundedRect: NSRect(x: x, y: offset + verticalInset, width: partitionWidth, height: maxPartitionHeight),
-                xRadius: barRadius, yRadius: barRadius
-            )
+            let barPath = NSBezierPath(rect: NSRect(
+                x: x, y: offset + verticalInset, width: partitionWidth, height: maxPartitionHeight
+            ))
             
             // dim track behind the fill, so an idle bar still reads as a bar.
             // opaque on purpose: the widget redraws without clearing, so an alpha
@@ -197,7 +195,7 @@ public class BarChart: WidgetWrapper {
                 barPath.fill()
             }
             
-            // clip the stacked segments to the rounded track to get the pill caps
+            // clip the stacked segments to the track so an over-1.0 value cannot overflow it
             NSGraphicsContext.saveGraphicsState()
             barPath.addClip()
             
