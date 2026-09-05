@@ -181,12 +181,15 @@ public class BarChart: WidgetWrapper {
         let partitionsMargin: CGFloat = (CGFloat(value.count - 1)) * partitionMargin / CGFloat(value.count - 1)
         let partitionWidth: CGFloat = (widthForBarChart / CGFloat(value.count)) - CGFloat(partitionsMargin.isNaN ? 0 : partitionsMargin)
         let maxPartitionHeight: CGFloat = box.bounds.height
+        // slight softening only when unboxed; a boxed chart keeps its square bars
+        let barRadius: CGFloat = self.boxState ? 0 : 2
         
         x += offset
         for i in 0..<value.count {
-            let barPath = NSBezierPath(rect: NSRect(
-                x: x, y: offset, width: partitionWidth, height: maxPartitionHeight
-            ))
+            let barPath = NSBezierPath(
+                roundedRect: NSRect(x: x, y: offset, width: partitionWidth, height: maxPartitionHeight),
+                xRadius: barRadius, yRadius: barRadius
+            )
             
             // dim track behind the fill, so an idle bar still reads as a bar.
             // opaque on purpose: the widget redraws without clearing, so an alpha
