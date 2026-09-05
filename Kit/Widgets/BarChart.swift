@@ -61,11 +61,14 @@ public class BarChart: WidgetWrapper {
             }
         }
         
+        // bars carry no text, so they can sit closer to the menu bar edges than the
+        // shared widget margin of 2 allows; 1 keeps a hair of breathing room
+        let marginY: CGFloat = 1
         super.init(.barChart, title: widgetTitle, frame: CGRect(
             x: Constants.Widget.margin.x,
-            y: Constants.Widget.margin.y,
+            y: marginY,
             width: Constants.Widget.width + (2*Constants.Widget.margin.x),
-            height: Constants.Widget.height - (2*Constants.Widget.margin.y)
+            height: Constants.Widget.height - (2*marginY)
         ))
         
         self.canDrawConcurrently = true
@@ -177,14 +180,12 @@ public class BarChart: WidgetWrapper {
         let partitionMargin: CGFloat = 0.5
         let partitionsMargin: CGFloat = (CGFloat(value.count - 1)) * partitionMargin / CGFloat(value.count - 1)
         let partitionWidth: CGFloat = (widthForBarChart / CGFloat(value.count)) - CGFloat(partitionsMargin.isNaN ? 0 : partitionsMargin)
-        // pill styling applies only when the box is off; a boxed chart renders as it always has
-        let verticalInset: CGFloat = self.boxState ? 0 : 1
-        let maxPartitionHeight: CGFloat = box.bounds.height - (verticalInset*2)
+        let maxPartitionHeight: CGFloat = box.bounds.height
         
         x += offset
         for i in 0..<value.count {
             let barPath = NSBezierPath(rect: NSRect(
-                x: x, y: offset + verticalInset, width: partitionWidth, height: maxPartitionHeight
+                x: x, y: offset, width: partitionWidth, height: maxPartitionHeight
             ))
             
             // dim track behind the fill, so an idle bar still reads as a bar.
@@ -199,7 +200,7 @@ public class BarChart: WidgetWrapper {
             NSGraphicsContext.saveGraphicsState()
             barPath.addClip()
             
-            var y = offset + verticalInset
+            var y = offset
             for a in 0..<value[i].count {
                 let partitionValue = value[i][a]
                 let partitionHeight = maxPartitionHeight * CGFloat(partitionValue.value)
