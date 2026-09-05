@@ -143,9 +143,14 @@ public class Sensors: Module {
                 widget.setValues(list)
             case let widget as BarChart:
                 var flatList: [[ColorValue]] = []
-                value.sensors.filter{ $0 is Fan }.forEach { (s: Sensor_p) in
-                    if s.state, let f = s as? Fan {
+                value.sensors.forEach { (s: Sensor_p) in
+                    guard s.state else { return }
+                    if let f = s as? Fan {
                         flatList.append([ColorValue(Double(f.percentage) / 100)])
+                    } else {
+                        // non-fan sensors are scaled by 100, same convention as the Mini widget,
+                        // so a 56°C reading fills 56% of the bar and hits the color zones at 60/80.
+                        flatList.append([ColorValue(s.localValue / 100)])
                     }
                 }
                 widget.setValue(flatList)

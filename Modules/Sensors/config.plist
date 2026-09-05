@@ -54,7 +54,7 @@
 			<key>Default</key>
 			<false/>
 			<key>Title</key>
-			<string>FAN</string>
+			<string>Sensor</string>
 			<key>Preview</key>
 			<dict>
 				<key>Value</key>
