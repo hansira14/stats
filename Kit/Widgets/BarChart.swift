@@ -182,7 +182,7 @@ public class BarChart: WidgetWrapper {
         let partitionWidth: CGFloat = (widthForBarChart / CGFloat(value.count)) - CGFloat(partitionsMargin.isNaN ? 0 : partitionsMargin)
         let maxPartitionHeight: CGFloat = box.bounds.height
         // slight softening only when unboxed; a boxed chart keeps its square bars
-        let barRadius: CGFloat = self.boxState ? 0 : 2
+        let barRadius: CGFloat = self.boxState ? 0 : 3
         
         x += offset
         for i in 0..<value.count {
